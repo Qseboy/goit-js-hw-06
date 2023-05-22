@@ -29,9 +29,13 @@ const getValueOfInput = event => {
   }
 };
 
+const destroyBoxes = () => {
+  console.log(boxesEl);
+  boxesEl.innerHTML = '';
+};
+
 const createBoxes = amount => {
   return () => {
-    console.log('amount' + amount);
     let widthEl = 30;
     let heigthEl = 30;
     for (let i = 0; i < amount; i++) {
@@ -59,3 +63,6 @@ const createBoxes = amount => {
 
 // get value of input
 inputCount.addEventListener('change', getValueOfInput);
+
+//
+destroyBtn.addEventListener('click', destroyBoxes);
