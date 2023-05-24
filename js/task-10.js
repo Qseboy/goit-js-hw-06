@@ -1,9 +1,3 @@
-function getRandomHexColor() {
-  return `#${Math.floor(Math.random() * 16777215)
-    .toString(16)
-    .padStart(6, 0)}`;
-}
-
 // Напиши скрипт создания и очистки коллекции элементов. Пользователь вводит количество элементов в
 // input и нажимает кнопку Создать, после чего рендерится коллекция.При нажатии на кнопку Очистить, коллекция элементов очищается.
 
@@ -17,50 +11,49 @@ function getRandomHexColor() {
 // Создай функцию destroyBoxes(), которая очищает содержимое div#boxes, тем самым удаляя все созданные элементы.
 
 const boxesEl = document.querySelector('#boxes');
-const createBtn = document.querySelector('button[data-create]');
-const destroyBtn = document.querySelector('button[data-destroy]');
-const inputCount = document.querySelector('input');
+const controlsEl = document.querySelector('#controls');
 
-const getValueOfInput = event => {
-  let inputValue = +event.currentTarget.value;
+const items = [];
+let valueQ = 0;
 
-  if (inputValue) {
-    createBtn.addEventListener('click', createBoxes(inputValue));
+const haddleButtonsEl = event => {
+  if (event.target.nodeName == 'INPUT') {
+    const inputEl = event.target;
+    inputEl.addEventListener('input', event => {
+      valueQ = event.target.value;
+    });
+  }
+
+  // if button is create
+  if (event.target.hasAttribute('data-create')) {
+    createBoxes(valueQ);
+  }
+
+  if (event.target.hasAttribute('data-destroy')) {
+    while (boxesEl.childNodes.length > 0) {
+      console.log(boxesEl.childNodes.length);
+      boxesEl.firstChild.remove();
+    }
+
+    items.splice(0);
   }
 };
 
-const destroyBoxes = () => {
-  boxesEl.innerHTML = '';
-};
+function createBoxes(amount) {
+  for (let i = 0; i < amount; i++) {
+    const divEl = document.createElement('div');
+    divEl.style.width = `${30 + 10 * i}px`;
+    divEl.style.height = `${30 + 10 * i}px`;
+    divEl.style.backgroundColor = getRandomHexColor();
+    items.push(divEl);
+  }
+  boxesEl.append(...items);
+}
 
-const createBoxes = amount => {
-  return () => {
-    let widthEl = 30;
-    let heigthEl = 30;
-    for (let i = 0; i < amount; i++) {
-      const divEl = document.createElement('div');
+function getRandomHexColor() {
+  return `#${Math.floor(Math.random() * 16777215)
+    .toString(16)
+    .padStart(6, 0)}`;
+}
 
-      if (i == 0) {
-        divEl.style.width = `${widthEl}px`;
-        divEl.style.height = `${heigthEl}px`;
-        divEl.style.backgroundColor = getRandomHexColor();
-        boxesEl.append(divEl);
-        continue;
-      }
-
-      widthEl += 10;
-      heigthEl += 10;
-
-      divEl.style.width = `${widthEl}px`;
-      divEl.style.height = `${heigthEl}px`;
-      divEl.style.backgroundColor = getRandomHexColor();
-
-      boxesEl.append(divEl);
-    }
-  };
-};
-
-// get value of input
-inputCount.addEventListener('change', getValueOfInput);
-
-destroyBtn.addEventListener('click', destroyBoxes);
+controlsEl.addEventListener('click', haddleButtonsEl);
