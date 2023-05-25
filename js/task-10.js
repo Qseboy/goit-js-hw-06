@@ -11,34 +11,13 @@
 // Создай функцию destroyBoxes(), которая очищает содержимое div#boxes, тем самым удаляя все созданные элементы.
 
 const boxesEl = document.querySelector('#boxes');
-const controlsEl = document.querySelector('#controls');
+const inputEl = document.querySelector('input');
+const buttonCreateEl = document.querySelector('button[data-create]');
+const buttonDestroyEl = document.querySelector('button[data-destroy]');
 
 const items = [];
-let valueQ = 0;
 
-const haddleButtonsEl = event => {
-  if (event.target.nodeName == 'INPUT') {
-    const inputEl = event.target;
-    inputEl.addEventListener('input', event => {
-      valueQ = event.target.value;
-    });
-  }
-
-  // if button is create
-  if (event.target.hasAttribute('data-create')) {
-    createBoxes(valueQ);
-  }
-
-  if (event.target.hasAttribute('data-destroy')) {
-    while (boxesEl.childNodes.length > 0) {
-      console.log(boxesEl.childNodes.length);
-      boxesEl.firstChild.remove();
-    }
-
-    items.splice(0);
-  }
-};
-
+// create div EL
 function createBoxes(amount) {
   for (let i = 0; i < amount; i++) {
     const divEl = document.createElement('div');
@@ -56,4 +35,13 @@ function getRandomHexColor() {
     .padStart(6, 0)}`;
 }
 
-controlsEl.addEventListener('click', haddleButtonsEl);
+buttonCreateEl.addEventListener('click', () => {
+  createBoxes(inputEl.value);
+});
+
+buttonDestroyEl.addEventListener('click', () => {
+  while (boxesEl.childNodes.length > 0) {
+    boxesEl.firstChild.remove();
+  }
+  items.splice(0);
+});
